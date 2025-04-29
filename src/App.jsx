@@ -36,6 +36,7 @@ export default function App() {
               <Route path="/text-to-sign" element={<TextToSign />} />
               <Route path="/tutorial" element={<Tutorial />} />
               <Route path="/contact" element={<Contact />} />
+              <Route path="/documentation" element={<DocumentationPage />} />
             </Routes>
             <FloatingButton />
           </main>
