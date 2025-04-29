@@ -1,6 +1,5 @@
 import { Link } from "react-router-dom"
 import { ArrowRight, Brain, Cpu, Zap, Github } from "lucide-react"
-import { Button } from "../components/ui/button"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "../components/ui/tabs"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "../components/ui/card"
 
@@ -51,23 +50,26 @@ export default function DocumentationPage() {
                   </p>
                 </div>
                 <div className="flex flex-col gap-2 min-[400px]:flex-row">
-                  <Button className="bg-blue-600 hover:bg-blue-700">
-                    Get Started
-                    <ArrowRight className="ml-2 h-4 w-4" />
-                  </Button>
-                  <Button variant="outline" className="mr-2">
-                    <Github className="mr-2 h-4 w-4" />
-                    View on GitHub
-                  </Button>
-                  <Button variant="outline">
-                    <svg className="mr-2 h-4 w-4" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                      <path
-                        d="M11.9997 1.89453C6.41891 1.89453 1.89453 6.41891 1.89453 11.9997C1.89453 17.5805 6.41891 22.1049 11.9997 22.1049C17.5805 22.1049 22.1049 17.5805 22.1049 11.9997C22.1049 6.41891 17.5805 1.89453 11.9997 1.89453ZM7.78784 17.3401C7.56691 17.2035 7.36438 17.0255 7.19207 16.8143C7.01976 16.6031 6.88077 16.3624 6.78172 16.1033C6.68267 15.8441 6.62517 15.5704 6.61188 15.2925C6.59858 15.0146 6.62973 14.7361 6.70391 14.4685C6.77809 14.2009 6.89407 13.9481 7.04677 13.7216C7.19947 13.4951 7.38655 13.2983 7.60003 13.1402C7.81351 12.9822 8.05025 12.8654 8.30069 12.7951C8.55113 12.7247 8.81124 12.7019 9.06891 12.7278C9.32658 12.7537 9.57857 12.8279 9.81297 12.9469C10.0474 13.0659 10.2608 13.2278 10.4436 13.4252C10.6264 13.6226 10.7758 13.8526 10.8851 14.1045C10.9944 14.3564 11.0619 14.6264 11.0849 14.9021C11.1079 15.1778 11.0861 15.4554 11.0204 15.7235C10.9547 15.9916 10.8461 16.2461 10.6992 16.4764C10.5523 16.7067 10.3695 16.9093 10.1592 17.0747C9.94887 17.24 9.71456 17.3655 9.46538 17.4453C9.2162 17.5251 8.95621 17.5579 8.69753 17.5422C8.43885 17.5265 8.18477 17.4625 7.94784 17.3531L7.78784 17.3401ZM17.3401 11.9997C17.3401 12.5301 17.2336 13.0549 17.0266 13.5422C16.8196 14.0295 16.5163 14.4695 16.1348 14.8348C15.7533 15.2 15.3013 15.4834 14.8066 15.6677C14.3118 15.8519 13.7842 15.9332 13.2553 15.9068C12.7264 15.8804 12.2088 15.7468 11.7329 15.5141C11.257 15.2814 10.8333 14.9545 10.4879 14.5533C10.1425 14.1522 9.88374 13.6855 9.72909 13.1812C9.57444 12.6769 9.52731 12.1458 9.59053 11.6221C9.65375 11.0984 9.82591 10.5931 10.0961 10.1359C10.3663 9.67866 10.7289 9.27948 11.1625 8.96419C11.5961 8.6489 12.0909 8.42493 12.6166 8.30621C13.1423 8.18749 13.6873 8.17671 14.2171 8.27458C14.7469 8.37245 15.2504 8.57673 15.6972 8.87518C16.144 9.17363 16.5246 9.56 16.8158 10.0097C17.107 10.4594 17.3026 10.9631 17.3901 11.4897L17.3401 11.9997Z"
-                        fill="currentColor"
-                      />
-                    </svg>
-                    View on Huggingface
-                  </Button>
+                  <Link
+        to="/predict"
+        className="inline-flex items-center gap-2 rounded-md bg-primary px-6 py-3 text-white transition-all hover:bg-transparent border-2 border-primary  hover:text-primary group"
+        data-aos="fade-up">
+        Get Started
+        <ArrowRight className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-1" />
+      </Link>
+                   <Link
+        to="/predict"
+        className="inline-flex items-center gap-2 rounded-md bg-primary px-6 py-3 text-white transition-all hover:bg-transparent border-2 border-primary  hover:text-primary group"
+        data-aos="fade-up">
+         View on GitHub
+        <ArrowRight className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-1" />
+      </Link> <Link
+        to="/predict"
+        className="inline-flex items-center gap-2 rounded-md bg-primary px-6 py-3 text-white transition-all hover:bg-transparent border-2 border-primary  hover:text-primary group"
+        data-aos="fade-up">
+        View on Huggingface
+        <ArrowRight className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-1" />
+      </Link>
                 </div>
               </div>
               <div className="flex items-center justify-center">
