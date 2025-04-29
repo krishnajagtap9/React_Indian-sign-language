@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom"
 import { ArrowRight, Brain, Cpu, Zap, Github } from "lucide-react"
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "../components/ui/tabs"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "../components/ui/card"
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "../components/tabs"
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "../components/card"
 
 export default function DocumentationPage() {
   return (
