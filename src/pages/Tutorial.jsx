@@ -263,7 +263,7 @@ export default function Tutorial() {
             </p>
             <Link
               to="/contact"
-              className="inline-flex items-center gap-2 rounded-md bg-secondary px-6 py-3 text-primary transition-all "
+              className="nline-flex items-center gap-2 rounded-md bg-primary px-6 py-3 text-primary-foreground transition-all hover:bg-primary/90 group"
             >
               Contact Support
             </Link>
