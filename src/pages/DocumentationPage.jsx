@@ -1,41 +1,175 @@
-import { Link } from "react-router-dom"
+"use client"
+
+import React from "react" 
 import { ArrowRight, Brain, Cpu, Zap, Github } from "lucide-react"
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "../components/tabs"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "../components/card"
+import { Link } from "react-router-dom"
+
+// Utility function for class names
+function cn(...classes) {
+  return classes.filter(Boolean).join(" ")
+}
+
+// Button Component
+function Button({ className, variant = "default", size = "default", children, ...props }) {
+  const buttonVariants = {
+    default:
+      "inline-flex items-center justify-center rounded-md bg-primary text-sm font-medium text-primary-foreground shadow transition-colors hover:bg-primary/90 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50",
+    outline:
+      "inline-flex items-center justify-center rounded-md border border-input bg-background text-sm font-medium shadow-sm transition-colors hover:bg-accent hover:text-accent-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50",
+    secondary:
+      "inline-flex items-center justify-center rounded-md bg-secondary text-sm font-medium text-secondary-foreground shadow-sm transition-colors hover:bg-secondary/80 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50",
+    ghost:
+      "inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50",
+    link: "inline-flex items-center justify-center text-sm font-medium text-primary underline-offset-4 hover:underline focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50",
+  }
+
+  const buttonSizes = {
+    default: "h-9 px-4 py-2",
+    sm: "h-8 rounded-md px-3 text-xs",
+    lg: "h-10 rounded-md px-8",
+    icon: "h-9 w-9",
+  }
+
+  return (
+    <button className={cn(buttonVariants[variant], buttonSizes[size], className)} {...props}>
+      {children}
+    </button>
+  )
+}
+
+// Card Components
+const Card = React.forwardRef(({ className, ...props }, ref) => (
+  <div ref={ref} className={cn("rounded-lg border bg-card text-card-foreground shadow-sm", className)} {...props} />
+))
+Card.displayName = "Card"
+
+const CardHeader = React.forwardRef(({ className, ...props }, ref) => (
+  <div ref={ref} className={cn("flex flex-col space-y-1.5 p-6", className)} {...props} />
+))
+CardHeader.displayName = "CardHeader"
+
+const CardTitle = React.forwardRef(({ className, ...props }, ref) => (
+  <h3 ref={ref} className={cn("text-lg font-semibold leading-none tracking-tight", className)} {...props} />
+))
+CardTitle.displayName = "CardTitle"
+
+const CardDescription = React.forwardRef(({ className, ...props }, ref) => (
+  <p ref={ref} className={cn("text-sm text-muted-foreground", className)} {...props} />
+))
+CardDescription.displayName = "CardDescription"
+
+const CardContent = React.forwardRef(({ className, ...props }, ref) => (
+  <div ref={ref} className={cn("p-6 pt-0", className)} {...props} />
+))
+CardContent.displayName = "CardContent"
+
+// Tabs Components
+const TabsContext = React.createContext(null)
+
+const useTabsContext = () => {
+  const context = React.useContext(TabsContext)
+  if (!context) {
+    throw new Error("Tabs components must be used within a Tabs component")
+  }
+  return context
+}
+
+const Tabs = ({ defaultValue, className, children, ...props }) => {
+  const [activeTab, setActiveTab] = React.useState(defaultValue)
+
+  const contextValue = React.useMemo(
+    () => ({
+      activeTab,
+      setActiveTab,
+    }),
+    [activeTab],
+  )
+
+  return (
+    <TabsContext.Provider value={contextValue}>
+      <div className={cn("w-full", className)} {...props}>
+        {children}
+      </div>
+    </TabsContext.Provider>
+  )
+}
+
+const TabsList = React.forwardRef(({ className, ...props }, ref) => (
+  <div
+    ref={ref}
+    className={cn(
+      "inline-flex h-10 items-center justify-center rounded-md bg-muted p-1 text-muted-foreground",
+      className,
+    )}
+    {...props}
+  />
+))
+TabsList.displayName = "TabsList"
+
+const TabsTrigger = React.forwardRef(({ className, value, children, ...props }, ref) => {
+  const { activeTab, setActiveTab } = useTabsContext()
+  const isActive = activeTab === value
+
+  return (
+    <button
+      ref={ref}
+      className={cn(
+        "inline-flex items-center justify-center whitespace-nowrap rounded-sm px-3 py-1.5 text-sm font-medium ring-offset-background transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50",
+        isActive ? "bg-background text-foreground shadow-sm" : "hover:bg-background/50 hover:text-foreground",
+        className,
+      )}
+      onClick={() => setActiveTab(value)}
+      {...props}
+    >
+      {children}
+    </button>
+  )
+})
+TabsTrigger.displayName = "TabsTrigger"
+
+const TabsContent = React.forwardRef(({ className, value, children, ...props }, ref) => {
+  const { activeTab } = useTabsContext()
+  const isActive = activeTab === value
+
+  if (!isActive) return null
+
+  return (
+    <div
+      ref={ref}
+      className={cn(
+        "mt-2 ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2",
+        className,
+      )}
+      {...props}
+    >
+      {children}
+    </div>
+  )
+})
+TabsContent.displayName = "TabsContent"
 
 export default function DocumentationPage() {
   return (
     <div className="flex min-h-screen flex-col">
-      <header className="sticky top-0 z-50 w-full border-b bg-white/95 backdrop-blur supports-[backdrop-filter]:bg-white/60">
-        <div className="container flex h-16 items-center space-x-4 sm:justify-between sm:space-x-0">
-          <div className="flex gap-2 items-center">
-            <div className="flex items-center justify-center w-8 h-8 rounded-full bg-blue-600 text-white font-bold text-sm">
-              VS
-            </div>
-            <Link to="/" className="text-xl font-bold text-blue-600">
-              Vaani Sahayak
-            </Link>
-          </div>
-          <div className="flex flex-1 items-center justify-end space-x-4">
-            <nav className="flex items-center space-x-2">
-              <Link to="#" className="text-sm font-medium transition-colors hover:text-blue-600">
-                Home
-              </Link>
-              <Link to="#" className="text-sm font-medium text-blue-600 transition-colors hover:text-blue-700">
-                Documentation
-              </Link>
-              <Link to="#" className="text-sm font-medium transition-colors hover:text-blue-600">
-                About
-              </Link>
-              <Link to="#" className="text-sm font-medium transition-colors hover:text-blue-600">
-                Contact
-              </Link>
-            </nav>
-          </div>
-        </div>
-      </header>
+      <style jsx global>{`
+        .perspective-1000 {
+          perspective: 1000px;
+        }
+        .transform-style-3d {
+          transform-style: preserve-3d;
+        }
+        .backface-hidden {
+          backface-visibility: hidden;
+        }
+        .rotate-y-180 {
+          transform: rotateY(180deg);
+        }
+        .flip-card:hover .flip-card-inner {
+          transform: rotateY(180deg);
+        }
+      `}</style>
       <main className="flex-1">
-        <section className="w-full py-12 md:py-24 lg:py-32 bg-blue-50">
+        <section className="w-full py-12 md:py-24 lg:py-32">
           <div className="container px-4 md:px-6">
             <div className="grid gap-6 lg:grid-cols-[1fr_400px] lg:gap-12 xl:grid-cols-[1fr_600px]">
               <div className="flex flex-col justify-center space-y-4">
@@ -50,44 +184,49 @@ export default function DocumentationPage() {
                   </p>
                 </div>
                 <div className="flex flex-col gap-2 min-[400px]:flex-row">
-                  <Link
-        to="/predict"
-        className="inline-flex items-center gap-2 rounded-md bg-primary px-6 py-3 text-white transition-all hover:bg-transparent border-2 border-primary  hover:text-primary group"
-        data-aos="fade-up">
-        Get Started
-        <ArrowRight className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-1" />
-      </Link>
-                   <Link
-        to="/predict"
-        className="inline-flex items-center gap-2 rounded-md bg-primary px-6 py-3 text-white transition-all hover:bg-transparent border-2 border-primary  hover:text-primary group"
-        data-aos="fade-up">
-         View on GitHub
-        <ArrowRight className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-1" />
-      </Link> <Link
-        to="/predict"
-        className="inline-flex items-center gap-2 rounded-md bg-primary px-6 py-3 text-white transition-all hover:bg-transparent border-2 border-primary  hover:text-primary group"
-        data-aos="fade-up">
-        View on Huggingface
-        <ArrowRight className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-1" />
-      </Link>
+                  <Button className="bg-blue-600 hover:bg-blue-700">
+                    
+                    <Link to="/predict">Get Started </Link>
+                    <ArrowRight className="ml-2 h-4 w-4" />
+                  </Button>
+                  <Button variant="outline" className="mr-2">
+                    <Github className="mr-2 h-4 w-4" />
+                    
+                    <Link to="https://github.com/krishnajagtap9/React_Indian-sign-language" target="/">View on GitHub</Link>
+                  </Button>
+                  <Button variant="outline">
+                    <svg className="mr-2 h-4 w-4" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                      <path
+                        d="M11.9997 1.89453C6.41891 1.89453 1.89453 6.41891 1.89453 11.9997C1.89453 17.5805 6.41891 22.1049 11.9997 22.1049C17.5805 22.1049 22.1049 17.5805 22.1049 11.9997C22.1049 6.41891 17.5805 1.89453 11.9997 1.89453ZM7.78784 17.3401C7.56691 17.2035 7.36438 17.0255 7.19207 16.8143C7.01976 16.6031 6.88077 16.3624 6.78172 16.1033C6.68267 15.8441 6.62517 15.5704 6.61188 15.2925C6.59858 15.0146 6.62973 14.7361 6.70391 14.4685C6.77809 14.2009 6.89407 13.9481 7.04677 13.7216C7.19947 13.4951 7.38655 13.2983 7.60003 13.1402C7.81351 12.9822 8.05025 12.8654 8.30069 12.7951C8.55113 12.7247 8.81124 12.7019 9.06891 12.7278C9.32658 12.7537 9.57857 12.8279 9.81297 12.9469C10.0474 13.0659 10.2608 13.2278 10.4436 13.4252C10.6264 13.6226 10.7758 13.8526 10.8851 14.1045C10.9944 14.3564 11.0619 14.6264 11.0849 14.9021C11.1079 15.1778 11.0861 15.4554 11.0204 15.7235C10.9547 15.9916 10.8461 16.2461 10.6992 16.4764C10.5523 16.7067 10.3695 16.9093 10.1592 17.0747C9.94887 17.24 9.71456 17.3655 9.46538 17.4453C9.2162 17.5251 8.95621 17.5579 8.69753 17.5422C8.43885 17.5265 8.18477 17.4625 7.94784 17.3531L7.78784 17.3401ZM17.3401 11.9997C17.3401 12.5301 17.2336 13.0549 17.0266 13.5422C16.8196 14.0295 16.5163 14.4695 16.1348 14.8348C15.7533 15.2 15.3013 15.4834 14.8066 15.6677C14.3118 15.8519 13.7842 15.9332 13.2553 15.9068C12.7264 15.8804 12.2088 15.7468 11.7329 15.5141C11.257 15.2814 10.8333 14.9545 10.4879 14.5533C10.1425 14.1522 9.88374 13.6855 9.72909 13.1812C9.57444 12.6769 9.52731 12.1458 9.59053 11.6221C9.65375 11.0984 9.82591 10.5931 10.0961 10.1359C10.3663 9.67866 10.7289 9.27948 11.1625 8.96419C11.5961 8.6489 12.0909 8.42493 12.6166 8.30621C13.1423 8.18749 13.6873 8.17671 14.2171 8.27458C14.7469 8.37245 15.2504 8.57673 15.6972 8.87518C16.144 9.17363 16.5246 9.56 16.8158 10.0097C17.107 10.4594 17.3026 10.9631 17.3901 11.4897L17.3401 11.9997Z"
+                        fill="currentColor"
+                      />
+                    </svg>
+                    <Link to="https://huggingface.co/spaces/KRISH09bha/vaani-sahayak/tree/main" target="/">View on Huggingface</Link>
+                  </Button>
                 </div>
               </div>
               <div className="flex items-center justify-center">
-                <div className="group w-[600px] h-[400px] perspective-[1000px] relative">
-                  <div className="w-full h-full transition-transform duration-700 transform-style-preserve-3d relative group-hover:[transform:rotateY(180deg)]">
-                    <div className="absolute w-full h-full backface-hidden">
-                      <img
-                        src="/images/vaani-sahayak-front.jpg"
-                        alt="Vaani Sahayak Demo Front"
-                        className="rounded-lg object-cover w-full h-full"
-                      />
-                    </div>
-                    <div className="absolute w-full h-full backface-hidden [transform:rotateY(180deg)]">
-                      <img
-                        src="/images/vaani-sahayak-back.jpg"
-                        alt="Vaani Sahayak Demo Back"
-                        className="rounded-lg object-cover w-full h-full"
-                      />
+                <div className="flex items-center justify-center">
+                  <div className="flip-card w-[600px] h-[400px] perspective-1000 relative">
+                    <div className="flip-card-inner w-full h-full transition-transform duration-700 transform-style-3d relative">
+                      <div className="flip-card-front absolute w-full h-full backface-hidden">
+                        <img
+                          src="https://www.researchgate.net/publication/357169928/figure/fig1/AS:1102920506449920@1639968148145/ndian-sign-language-for-numbers-and-alphabets.png?height=400&width=600"
+                          width={600}
+                          height={400}
+                          alt="Vaani Sahayak Demo Front"
+                          className="rounded-lg object-cover w-full h-full"
+                        />
+                      </div>
+                      <div className="flip-card-back absolute w-full h-full backface-hidden rotate-y-180">
+                        <img
+                          src="https://i.pinimg.com/564x/b5/40/c1/b540c1915272fea4ab80472654569a51.jpg?height=400&width=600&text=Vaani+Sahayak+Demo+Back"
+                          width={600}
+                          height={400}
+                          alt="Vaani Sahayak Demo Back"
+                          className="rounded-lg object-cover w-full h-full"
+                        />
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -689,21 +828,6 @@ def root():
           </div>
         </section>
       </main>
-      <footer className="w-full border-t py-6 md:py-0">
-        <div className="container flex flex-col items-center justify-between gap-4 md:h-24 md:flex-row">
-          <p className="text-center text-sm leading-loose text-gray-500 md:text-left">
-            © 2024 Vaani Sahayak. All rights reserved.
-          </p>
-          <div className="flex items-center gap-4">
-            <Link to="#" className="text-sm font-medium underline underline-offset-4">
-              Terms of Service
-            </Link>
-            <Link to="#" className="text-sm font-medium underline underline-offset-4">
-              Privacy
-            </Link>
-          </div>
-        </div>
-      </footer>
     </div>
   )
 }
